@@ -1,10 +1,10 @@
-package com.restfull.promptbackend;
+package com.restful.promptbackend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PromptBackendApplicationTests {
+class RoleAuthApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,4 +1,4 @@
-package com.restfull.promptbackend;
+package com.restful.promptbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
