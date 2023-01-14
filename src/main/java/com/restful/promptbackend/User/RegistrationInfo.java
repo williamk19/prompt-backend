@@ -8,21 +8,19 @@ import javax.validation.constraints.Pattern;
 
 public class RegistrationInfo {
   @NotNull
-  @Length(min = 5, max = 16)
-  @Pattern(regexp = "^[a-zA-Z0-9]+$")
+  @Length(min = 5, max = 30)
   private String username;
 
   @NotNull
-  @Length(min = 8, max = 16)
-  @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[!@#_])(?=.*[A-Z]).*$")
+  @Length(min = 8, max = 30)
   private String password;
 
   @Nullable
-  @Length(max = 50)
+  @Length(max = 100)
   private String name;
 
   @Nullable
-  @Length(max = 50)
+  @Length(max = 100)
   private String address;
 
   public RegistrationInfo(String username, String password, String name, String address) {

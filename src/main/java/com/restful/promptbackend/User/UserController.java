@@ -29,6 +29,7 @@ public class UserController {
   PasswordEncoder passwordEncoder;
 
   @PostMapping("/login")
+  @CrossOrigin(origins = "http://localhost:3000")
   public ResponseEntity<?> login(@RequestBody @Valid LoginInfo loginInfo) {
     Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInfo.getUsername(), loginInfo.getPassword()));
 
@@ -40,6 +41,7 @@ public class UserController {
   }
 
   @PostMapping("/register")
+  @CrossOrigin(origins = "http://localhost:3000")
   public ResponseEntity<?> register(@RequestBody @Valid RegistrationInfo registrationInfo) {
     String password = passwordEncoder.encode(registrationInfo.getPassword());
     User newUser = new User(
