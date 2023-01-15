@@ -17,9 +17,8 @@ public class Role {
   public Role(String roleName) {
     this.roleName = roleName;
   }
-  public Role(Integer id, String roleName) {
+  public Role(Integer id) {
     this.id = id;
-    this.roleName = roleName;
   }
 
   @Override

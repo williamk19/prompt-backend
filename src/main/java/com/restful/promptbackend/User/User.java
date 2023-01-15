@@ -19,7 +19,7 @@ public class User implements UserDetails {
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "role_id")
   )
-  private Set<Role> roles = new HashSet<>();
+  private Set<Role> roles;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,16 +35,17 @@ public class User implements UserDetails {
   private String name;
 
   @Column(nullable = true, length = 50)
-  private String address;
+  private String email;
 
   public User() {
   }
 
-  public User(String username, String password, String name, String address) {
+  public User(String username, String password, String name, String email) {
     this.username = username;
     this.password = password;
     this.name = name;
-    this.address = address;
+    this.email = email;
+    this.roles = new HashSet<Role>();
   }
 
   public Integer getId() {
@@ -79,12 +80,12 @@ public class User implements UserDetails {
     this.name = name;
   }
 
-  public String getAddress() {
-    return address;
+  public String getEmail() {
+    return email;
   }
 
-  public void setAddress(String address) {
-    this.address = address;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   @Override

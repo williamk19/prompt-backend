@@ -1,5 +1,6 @@
 package com.restful.promptbackend.User;
 
+import com.restful.promptbackend.Role.Role;
 import com.restful.promptbackend.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
@@ -45,11 +47,13 @@ public class UserController {
   public ResponseEntity<?> register(@RequestBody @Valid RegistrationInfo registrationInfo) {
     String password = passwordEncoder.encode(registrationInfo.getPassword());
     User newUser = new User(
-            registrationInfo.getUsername(),
-            password,
-            registrationInfo.getName(),
-            registrationInfo.getAddress()
-            );
+      registrationInfo.getUsername(),
+      password,
+      registrationInfo.getName(),
+      registrationInfo.getEmail()
+    );
+    newUser.addRole(new Role(3));
+
     User savedUser = userRepository.save(newUser);
     return new ResponseEntity<>("", HttpStatus.CREATED);
   }

@@ -21,13 +21,13 @@ public class RegistrationInfo {
 
   @Nullable
   @Length(max = 100)
-  private String address;
+  private String email;
 
-  public RegistrationInfo(String username, String password, String name, String address) {
+  public RegistrationInfo(String username, String password, String name, String email) {
     this.username = username;
     this.password = password;
     this.name = name;
-    this.address = address;
+    this.email = email;
   }
 
   public String getUsername() {
@@ -54,11 +54,11 @@ public class RegistrationInfo {
     this.name = name;
   }
 
-  public String getAddress() {
-    return address;
+  public String getEmail() {
+    return email;
   }
 
-  public void setAddress(String address) {
-    this.address = address;
+  public void setEmail(String email) {
+    this.email = email;
   }
 }
