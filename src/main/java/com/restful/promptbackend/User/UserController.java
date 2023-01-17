@@ -11,11 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import java.util.Set;
+import java.util.*;
 
 @RestController
-@RequestMapping("/auth")
 public class UserController {
 
   @Autowired
@@ -30,20 +30,19 @@ public class UserController {
   @Autowired
   PasswordEncoder passwordEncoder;
 
-  @PostMapping("/login")
-  @CrossOrigin(origins = "http://localhost:3000")
+  @PostMapping("/auth/login")
   public ResponseEntity<?> login(@RequestBody @Valid LoginInfo loginInfo) {
     Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInfo.getUsername(), loginInfo.getPassword()));
 
     User user = (User) authentication.getPrincipal();
     String accessToken = jwtTokenUtil.generateAccessToken(user);
-    LoginResponse response = new LoginResponse(user.getUsername(), accessToken);
+    String role = user.getRoles().toArray()[0].toString();
+    LoginResponse response = new LoginResponse(user.getUsername(), role, accessToken);
 
     return ResponseEntity.ok().body(response);
   }
 
-  @PostMapping("/register")
-  @CrossOrigin(origins = "http://localhost:3000")
+  @PostMapping("/auth/register")
   public ResponseEntity<?> register(@RequestBody @Valid RegistrationInfo registrationInfo) {
     String password = passwordEncoder.encode(registrationInfo.getPassword());
     User newUser = new User(
@@ -56,5 +55,35 @@ public class UserController {
 
     User savedUser = userRepository.save(newUser);
     return new ResponseEntity<>("", HttpStatus.CREATED);
+  }
+
+  @GetMapping("/users/list")
+  @RolesAllowed({"ROLE_ADMIN"})
+  public List<User> userAll() {
+    return userRepository.findAll();
+  }
+
+  @PostMapping("/users/{id}/role")
+  @RolesAllowed({"ROLE_ADMIN"})
+  public ResponseEntity<?> editUserRole(@PathVariable Integer id, @RequestBody Role role) {
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()) {
+      User tempUser = user.get();
+      int roleId = 0;
+      if (Objects.equals(role.getRoleName(), "ROLE_ADMIN")) {
+        roleId = 1;
+      } else if (Objects.equals(role.getRoleName(), "ROLE_PM")) {
+        roleId = 2;
+      } else if (Objects.equals(role.getRoleName(), "ROLE_EMPLOYEE")) {
+        roleId = 3;
+      }
+      tempUser.resetRole();
+      tempUser.addRole(new Role(roleId));
+
+      User updatedUser = userRepository.save(tempUser);
+      return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
   }
 }

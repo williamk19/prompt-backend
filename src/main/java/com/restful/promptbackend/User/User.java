@@ -15,11 +15,11 @@ public class User implements UserDetails {
 
   @ManyToMany
   @JoinTable(
-          name = "users_role",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id")
+    name = "users_role",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id")
   )
-  private Set<Role> roles;
+  private Set<Role> roles = new HashSet<>();
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,6 +107,10 @@ public class User implements UserDetails {
 
   public void addRole(Role role) {
     this.roles.add(role);
+  }
+
+  public void resetRole() {
+    this.roles.clear();
   }
 
   @Override
