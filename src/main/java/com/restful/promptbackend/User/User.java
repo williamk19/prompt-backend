@@ -3,6 +3,7 @@ package com.restful.promptbackend.User;
 import javax.persistence.*;
 
 import com.restful.promptbackend.Role.Role;
+import com.restful.promptbackend.Task.Task;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +37,17 @@ public class User implements UserDetails {
 
   @Column(nullable = true, length = 50)
   private String email;
+
+  public List getTaskId() {
+    return taskId;
+  }
+
+  public void setTaskId(List taskId) {
+    this.taskId = taskId;
+  }
+
+  @OneToMany (targetEntity = Task.class)
+  private List taskId;
 
   public User() {
   }
