@@ -17,8 +17,8 @@ public class Task {
     private String titleTask;
 
     @ManyToOne
-    @Column(nullable = false, length = 50)
-    private String users;
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
 
     @Column(nullable = false)
     @NotNull
@@ -28,6 +28,13 @@ public class Task {
     @NotNull
     private String status;
     public Task(){}
+
+    public Task(String titleTask, User user, String descTask, String status) {
+        this.titleTask = titleTask;
+        this.user = user;
+        this.descTask = descTask;
+        this.status = status;
+    }
 
     public String getStatus() {
         return status;
@@ -60,11 +67,12 @@ public class Task {
     public void setDescTask(String descTask) {
         this.descTask = descTask;
     }
-    public String getUsers() {
-        return users;
+
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(String users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -22,6 +22,9 @@ public class User implements UserDetails {
   )
   private Set<Role> roles = new HashSet<>();
 
+  @OneToMany (targetEntity = Task.class)
+  private Set<Task> tasks;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
@@ -37,17 +40,6 @@ public class User implements UserDetails {
 
   @Column(nullable = true, length = 50)
   private String email;
-
-  public List getTaskId() {
-    return taskId;
-  }
-
-  public void setTaskId(List taskId) {
-    this.taskId = taskId;
-  }
-
-  @OneToMany (targetEntity = Task.class)
-  private List taskId;
 
   public User() {
   }
@@ -123,6 +115,14 @@ public class User implements UserDetails {
 
   public void resetRole() {
     this.roles.clear();
+  }
+
+  public Set<Task> getTasks() {
+    return tasks;
+  }
+
+  public void setTasks(Set<Task> tasks) {
+    this.tasks = tasks;
   }
 
   @Override
