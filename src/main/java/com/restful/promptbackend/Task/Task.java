@@ -17,7 +17,7 @@ public class Task {
     private String titleTask;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(nullable=false)
     private User user;
 
     @Column(nullable = false)
