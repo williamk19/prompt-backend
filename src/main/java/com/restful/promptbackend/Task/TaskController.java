@@ -5,6 +5,7 @@ import com.restful.promptbackend.User.UserRepository;
 import com.restful.promptbackend.jwt.JwtTokenUtil;
 import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +16,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/task")
@@ -26,20 +29,57 @@ public class TaskController {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private JwtTokenUtil jwtTokenUtil;
+
   @GetMapping("/list")
-  @RolesAllowed({"ROLE_ADMIN", "ROLE_PM", "ROLE_EMPLOYEE"})
+  @RolesAllowed({"ROLE_ADMIN", "ROLE_PM"})
   public List<Task> listAll() {
     return taskRepository.findAll();
   }
 
+  @GetMapping("/user/{username}")
+  @RolesAllowed({"ROLE_ADMIN", "ROLE_PM", "ROLE_EMPLOYEE"})
+  public ResponseEntity<?> listByUser(
+    @PathVariable("username") String username,
+    @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    String uname = jwtTokenUtil.getUsername(token.split(" ")[1].trim());
+    String role = jwtTokenUtil.getRoles(token.split(" ")[1].trim())[0];
+
+    if (userRepository.findByUsername(username).isPresent()) {
+      User user = userRepository.findByUsername(username).get();
+      if (!Objects.equals(role, "ROLE_EMPLOYEE")) {
+        return new ResponseEntity<>(user, HttpStatus.OK);
+      } else {
+        if (Objects.equals(user.getUsername(), uname)) {
+          return new ResponseEntity<>(user.getTasks(), HttpStatus.OK);
+        }
+      }
+    }
+    return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
+  }
+
   @GetMapping("/{id}")
   @RolesAllowed({"ROLE_ADMIN", "ROLE_PM", "ROLE_EMPLOYEE"})
-  public ResponseEntity<Optional<Task>> getTask(@PathVariable("id") Integer task_id) {
+  public ResponseEntity<?> getTask(
+    @PathVariable("id") Integer task_id,
+    @RequestHeader(HttpHeaders.AUTHORIZATION) String token
+  ) {
+    String username = jwtTokenUtil.getUsername(token.split(" ")[1].trim());
+    String role = jwtTokenUtil.getRoles(token.split(" ")[1].trim())[0];
+
     if (taskRepository.findById(task_id).isPresent()) {
-      return new ResponseEntity<>(taskRepository.findById(task_id), HttpStatus.OK);
-    } else {
-      return ResponseEntity.notFound().build();
+      Task task = taskRepository.findById(task_id).get();
+      if (!Objects.equals(role, "ROLE_EMPLOYEE")) {
+        return new ResponseEntity<>(task, HttpStatus.OK);
+      } else {
+        if (Objects.equals(task.getUser().getUsername(), username)) {
+          return new ResponseEntity<>(task, HttpStatus.OK);
+        }
+      }
     }
+
+    return ResponseEntity.notFound().build();
   }
 
   @PostMapping("/create")
@@ -68,7 +108,7 @@ public class TaskController {
   public ResponseEntity<Task> updateTask(
     @PathVariable("id") Integer task_id,
     @RequestBody @Valid TaskRequest taskRequest
-    ) {
+  ) {
     Optional<Task> taskData = taskRepository.findById(task_id);
     Optional<User> user = userRepository.findById(taskRequest.getUserId());
     if (taskData.isPresent() && user.isPresent()) {

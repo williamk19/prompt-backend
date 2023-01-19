@@ -24,13 +24,13 @@ public class JwtTokenUtil {
 
   public String generateAccessToken(User user) {
     return Jwts.builder()
-            .setSubject(user.getUsername())
-            .setIssuer(ISSUER_NAME)
-            .claim("roles", user.getRoles().toString())
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
-            .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-            .compact();
+      .setSubject(user.getUsername())
+      .setIssuer(ISSUER_NAME)
+      .claim("roles", user.getRoles().toString())
+      .setIssuedAt(new Date())
+      .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
+      .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+      .compact();
   }
 
   public boolean validateAccessToken(String accessToken) {
@@ -48,7 +48,7 @@ public class JwtTokenUtil {
     return rolesList;
   }
 
-  public String  getUsername(String accessToken) {
+  public String getUsername(String accessToken) {
     return getSubject(accessToken);
   }
 
@@ -59,8 +59,8 @@ public class JwtTokenUtil {
   private Jws<Claims> parseClaims(String token) {
     try {
       return Jwts.parser()
-              .setSigningKey(SECRET_KEY)
-              .parseClaimsJws(token);
+        .setSigningKey(SECRET_KEY)
+        .parseClaimsJws(token);
     } catch (ExpiredJwtException ex) {
       LOGGER.error("JWT expired", ex.getMessage());
     } catch (IllegalArgumentException ex) {
