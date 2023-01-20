@@ -39,7 +39,7 @@ public class TaskController {
   }
 
   @GetMapping("/user/{username}")
-  @RolesAllowed({"ROLE_ADMIN", "ROLE_PM", "ROLE_EMPLOYEE"})
+  @RolesAllowed({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
   public ResponseEntity<?> listByUser(
     @PathVariable("username") String username,
     @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
@@ -49,7 +49,7 @@ public class TaskController {
     if (userRepository.findByUsername(username).isPresent()) {
       User user = userRepository.findByUsername(username).get();
       if (!Objects.equals(role, "ROLE_EMPLOYEE")) {
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user.getTasks(), HttpStatus.OK);
       } else {
         if (Objects.equals(user.getUsername(), uname)) {
           return new ResponseEntity<>(user.getTasks(), HttpStatus.OK);

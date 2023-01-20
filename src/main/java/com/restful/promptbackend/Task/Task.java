@@ -1,5 +1,7 @@
 package com.restful.promptbackend.Task;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.restful.promptbackend.User.User;
 
 import javax.persistence.*;
@@ -17,7 +19,9 @@ public class Task {
     private String titleTask;
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinTable(name="user_task",
+      joinColumns={@JoinColumn(name="task_id")},
+      inverseJoinColumns={@JoinColumn(name="user_id")})
     private User user;
 
     @Column(nullable = false)

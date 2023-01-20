@@ -2,8 +2,11 @@ package com.restful.promptbackend.User;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restful.promptbackend.Role.Role;
 import com.restful.promptbackend.Task.Task;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,8 +25,10 @@ public class User implements UserDetails {
   )
   private Set<Role> roles = new HashSet<>();
 
-  @OneToMany (targetEntity = Task.class)
-  private Set<Task> tasks;
+  @OneToMany(mappedBy = "user")
+  @Fetch(FetchMode.JOIN)
+  @JsonIgnore
+  private Set<Task> tasks = new HashSet<>();
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +54,6 @@ public class User implements UserDetails {
     this.password = password;
     this.name = name;
     this.email = email;
-    this.roles = new HashSet<Role>();
   }
 
   public Integer getId() {

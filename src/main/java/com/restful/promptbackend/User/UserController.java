@@ -58,7 +58,7 @@ public class UserController {
   }
 
   @GetMapping("/users/list")
-  @RolesAllowed({"ROLE_ADMIN"})
+  @RolesAllowed({"ROLE_ADMIN", "ROLE_PM"})
   public List<User> userAll() {
     return userRepository.findAll();
   }
