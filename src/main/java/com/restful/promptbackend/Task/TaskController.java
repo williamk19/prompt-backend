@@ -48,12 +48,10 @@ public class TaskController {
 
     if (userRepository.findByUsername(username).isPresent()) {
       User user = userRepository.findByUsername(username).get();
-      if (!Objects.equals(role, "ROLE_EMPLOYEE")) {
+      if (Objects.equals(role, "ROLE_ADMIN")) {
         return new ResponseEntity<>(user.getTasks(), HttpStatus.OK);
-      } else {
-        if (Objects.equals(user.getUsername(), uname)) {
-          return new ResponseEntity<>(user.getTasks(), HttpStatus.OK);
-        }
+      } else if (Objects.equals(user.getUsername(), uname)) {
+        return new ResponseEntity<>(user.getTasks(), HttpStatus.OK);
       }
     }
     return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
