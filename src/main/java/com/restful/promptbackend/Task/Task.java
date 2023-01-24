@@ -19,7 +19,7 @@ public class Task {
     private String titleTask;
 
     @ManyToOne
-    @JoinTable(name="user_task",
+    @JoinTable(name="users_task",
       joinColumns={@JoinColumn(name="task_id")},
       inverseJoinColumns={@JoinColumn(name="user_id")})
     private User user;
