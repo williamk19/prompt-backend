@@ -44,7 +44,6 @@ public class TaskController {
     @PathVariable("username") String username,
     @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
     String uname = jwtTokenUtil.getUsername(token.split(" ")[1].trim());
-    String role = jwtTokenUtil.getRoles(token.split(" ")[1].trim())[0];
 
     if (userRepository.findByUsername(username).isPresent()) {
       User user = userRepository.findByUsername(username).get();
