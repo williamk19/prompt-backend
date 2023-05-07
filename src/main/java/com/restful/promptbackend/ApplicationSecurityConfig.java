@@ -56,7 +56,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
       .csrf().disable()
       .cors().configurationSource(request -> {
         var cors = new CorsConfiguration();
-        cors.setAllowedOrigins(List.of("http://localhost:3000", "https://prompt-fe.vercel.app/"));
+        cors.setAllowedOrigins(List.of("http://localhost:3000", "https://prompt-fe.vercel.app/", "https://prompt-fe.williamk19.com"));
         cors.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
         cors.setAllowedHeaders(List.of("*"));
         return cors;
@@ -66,7 +66,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
       .authorizeRequests()
       .antMatchers("/auth/login").permitAll()
       .antMatchers("/auth/register").permitAll()
-      .antMatchers("/test").permitAll()
+      .antMatchers("/").permitAll()
       .anyRequest().authenticated();
 
     http.exceptionHandling()

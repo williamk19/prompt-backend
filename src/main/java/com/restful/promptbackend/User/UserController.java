@@ -30,7 +30,7 @@ public class UserController {
   @Autowired
   PasswordEncoder passwordEncoder;
 
-  @GetMapping("/test")
+  @GetMapping("/")
   public ResponseEntity<?> test() {
     Map<String, Object> map = new HashMap<>();
     map.put("server", "runnning");
