@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  mysql_db:
+    image: "mysql:latest"
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: prompt-db
+      MYSQL_ROOT_PASSWORD: "${MYSQLDB_ROOT_PASSWORD}"
+
+  api_service:
+    build: .
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql_db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:3306/prompt-db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: "${MYSQLDB_ROOT_PASSWORD}"
+
+

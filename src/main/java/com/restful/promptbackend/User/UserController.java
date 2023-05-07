@@ -30,6 +30,31 @@ public class UserController {
   @Autowired
   PasswordEncoder passwordEncoder;
 
+  @GetMapping("/test")
+  public ResponseEntity<?> test() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("server", "runnning");
+    map.put("help", "https://github.com/williamk19/prompt-backend");
+
+    Optional<User> user = userRepository.findByUsername("superadmin");
+    if (user.isPresent()) {
+      map.put("superadmin_init", "done");
+    } else {
+      String password = passwordEncoder.encode("superadmin");
+      User newUser = new User(
+        "superadmin",
+        password,
+        "superadmin",
+        "superadmin@gmail.com"
+      );
+      newUser.addRole(new Role(1));
+      map.put("superadmin_init", "created");
+      User savedUser = userRepository.save(newUser);
+    }
+
+    return ResponseEntity.ok().body(map);
+  }
+
   @PostMapping("/auth/login")
   public ResponseEntity<?> login(@RequestBody @Valid LoginInfo loginInfo) {
     Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInfo.getUsername(), loginInfo.getPassword()));
